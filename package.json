@@ -9,5 +9,8 @@
   },
   "dependencies": {
     "modules": "github:crestfall-sh/modules"
+  },
+  "scripts": {
+    "reinstall-modules": "npm install github:crestfall-sh/modules"
   }
 }

@@ -1,0 +1,71 @@
+# sudo docker compose up --force-recreate --build
+
+version: '3.8'
+
+services:
+
+  postgresql:
+    build:
+      # path of parent directory
+      context: ./
+      # path relative to context
+      dockerfile: ./docker/postgresql/Dockerfile
+    restart: "no"
+    network_mode: "host" # 5432
+    command: postgres -c shared_preload_libraries=pgaudit,pgsodium
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: ${POSTGRES_USER:?error}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?error}
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: 5432
+    volumes:
+      - ./docker/volumes/postgresql/data:/var/lib/postgresql/data
+      - ./docker/postgresql/entrypoint:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready --username=postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgrest:
+    image: postgrest/postgrest
+    restart: "no"
+    network_mode: "host" # 5433
+    environment:
+      PGRST_DB_ANON_ROLE: anon
+      PGRST_DB_SCHEMAS: ${PGRST_DB_SCHEMAS:?error}
+      PGRST_DB_EXTRA_SEARCH_PATH: ${PGRST_DB_EXTRA_SEARCH_PATH:?error}
+      PGRST_DB_URI: postgresql://${POSTGRES_USER:?error}:${POSTGRES_PASSWORD:?error}@localhost:5432/postgres
+      PGRST_SERVER_PORT: 5433
+      PGRST_JWT_SECRET: ${PGRST_JWT_SECRET:?error}
+      PGRST_JWT_SECRET_IS_BASE64: ${PGRST_JWT_SECRET_IS_BASE64:?error}
+      PGRST_JWT_AUD: crestfall
+      PGRST_LOG_LEVEL: warn
+    depends_on:
+      postgresql:
+        condition: service_healthy
+
+  playground:
+    build:
+      # path of parent directory
+      context: ./
+      # path relative to context
+      dockerfile: ./docker/playground/Dockerfile
+    restart: "no"
+    network_mode: "host" # 8080
+    command: node ./index.mjs
+    depends_on:
+      - postgrest
+
+  caddy:
+    image: caddy:2
+    restart: "no"
+    network_mode: "host" # 80, 443, 443/udp
+    volumes:
+      - ./docker/volumes/caddy/data:/data
+      - ./docker/volumes/caddy/config:/config
+      - ./docker/volumes/caddy/logs:/var/log/caddy/
+      - ./docker/caddy/Caddyfile:/etc/caddy/Caddyfile
+    depends_on:
+      - playground

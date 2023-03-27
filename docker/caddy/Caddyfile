@@ -1,0 +1,19 @@
+{
+  log {
+    format console
+  }
+}
+
+playground.crestfall.sh {
+  handle {
+    header {
+      Cache-Control "no-cache"
+      Strict-Transport-Security "max-age=63072000"
+      defer
+    }
+    reverse_proxy 0.0.0.0:8080
+  }
+  tls joshxyzhimself@gmail.com {
+    protocols tls1.3
+  }
+}
