@@ -5,10 +5,7 @@
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^18.14.2",
-    "@types/react": "^18.0.28",
-    "eslint": "^8.3.0",
-    "eslint-plugin-react": "^7.26.1",
-    "eslint-plugin-react-hooks": "^4.2.0"
+    "eslint": "^8.3.0"
   },
   "dependencies": {
     "modules": "github:crestfall-sh/modules"
