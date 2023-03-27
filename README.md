@@ -1,9 +1,12 @@
 # authn
 
-#### Planned
+#### Dependencies
 
 - PostgreSQL
 - PostgREST
+
+#### Planned
+
 - Sign-up with Email
 - Sign-in with Email
 - Verify with Email
