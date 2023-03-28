@@ -5,22 +5,11 @@ import postgres from 'postgres';
 const sql = postgres({ username: 'postgres', password: 'wrongpass' });
 
 {
-  const response = await sql`
-    CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-  `;
-  console.log({ response });
-}
-
-{
-  const response = await sql`
-    SELECT uuid_generate_v4();
-  `;
-  console.log({ response });
-}
-
-{
-  const response = await sql`
-    CREATE TABLE "users" (
+  console.log(12);
+  await sql`CREATE SCHEMA private;`;
+  console.log(13);
+  await sql`
+    CREATE TABLE private.users (
         "id" uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
         "email" text DEFAULT NULL,
         "email_verification_code" text DEFAULT NULL,
@@ -41,6 +30,5 @@ const sql = postgres({ username: 'postgres', password: 'wrongpass' });
         UNIQUE("phone")
     );
   `;
-  console.log({ response });
 }
 
