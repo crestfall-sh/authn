@@ -1,5 +1,13 @@
 // @ts-check
 
+/**
+ * - [ ] load jwt secret from .env
+ * - [ ] test connection with postgrest
+ * - [ ] test sign-up
+ * - [ ] test sign-in
+ * - [ ] complete all authentication-related functions here.
+ */
+
 import fs from 'fs';
 import url from 'url';
 import path from 'path';
