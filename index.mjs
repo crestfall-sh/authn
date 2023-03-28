@@ -12,10 +12,11 @@ import fs from 'fs';
 import url from 'url';
 import path from 'path';
 import assert from 'assert';
-import * as luxon from 'luxon';
-import * as hs256 from 'modules/hs256.mjs';
 import * as web from 'modules/web.mjs';
+import * as hs256 from 'modules/hs256.mjs';
 import lenv from 'modules/lenv.mjs';
+import hs256_create_token from './utils/hs256_create_token.mjs';
+import postgrest_request from './utils/postgrest_request.mjs';
 
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -26,42 +27,31 @@ const PGRST_JWT_SECRET = process.env['PGRST_JWT_SECRET'];
 assert(typeof PGRST_JWT_SECRET === 'string');
 console.log({ PGRST_JWT_SECRET });
 
-
 /**
- * exp: defaults to T + 15 Minutes
- * sub, role, email, scopes: defaults to null
- * @param {string} secret_b64
- * @param {import('modules/hs256').payload} payload_override
- * @returns {Promise<string>}
+ * @param {string} refresh_token
  */
-export const create_token = async (secret_b64, payload_override) => {
-  assert(typeof secret_b64 === 'string');
-  assert(payload_override instanceof Object);
-  /**
-   * @type {import('modules/hs256').header}
-   */
-  const header = { alg: 'HS256', typ: 'JWT' };
-  /**
-   * @type {import('modules/hs256').payload}
-   */
-  const payload = {
-    iat: Math.trunc(luxon.DateTime.now().toSeconds()),
-    nbf: Math.trunc(luxon.DateTime.now().toSeconds()),
-    exp: Math.trunc(luxon.DateTime.now().plus({ minutes: 15 }).toSeconds()),
-    iss: 'crestfall',
-    aud: 'crestfall',
-    sub: null,
-    role: null,
-    email: null,
-    scopes: null,
-  };
-  Object.assign(payload, payload_override);
-  const token = hs256.create_token(header, payload, secret_b64);
-  return token;
+const use_refresh_token = async (refresh_token) => {
+
 };
 
-const token = await create_token(PGRST_JWT_SECRET, { exp: null, role: 'admin' });
-console.log({ token });
+const admin_token = await hs256_create_token(PGRST_JWT_SECRET, { exp: null, role: 'admin' });
+console.log({ admin_token });
+console.log(hs256.read_token(admin_token));
+
+{
+  const email = 'user@example.com';
+  const response = await postgrest_request({
+    protocol: 'http',
+    hostname: 'localhost',
+    port: 5433,
+    token: admin_token,
+    pathname: '/users',
+    search: { email: `eq.${email}` },
+    method: 'GET',
+    headers: { 'Accept-Profile': 'private', 'Content-Profile': 'private' },
+  });
+  console.log({ response });
+}
 
 /**
  * @param {string} email
@@ -75,6 +65,7 @@ const email_sign_up = async (email, password) => {
   // normalize email
   // check if email is unused
   // check if password length is ideal.
+
   return null;
 };
 

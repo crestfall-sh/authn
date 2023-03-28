@@ -4,7 +4,7 @@ version: '3.8'
 services:
 
   postgresql:
-    image: postgres:15
+    image: postgres:latest
     restart: "no"
     network_mode: "host"
     environment:
@@ -23,7 +23,7 @@ services:
       retries: 5
 
   postgrest:
-    image: postgrest/postgrest
+    image: postgrest/postgrest:latest
     restart: "no"
     network_mode: "host"
     environment:
@@ -36,6 +36,18 @@ services:
       PGRST_JWT_SECRET_IS_BASE64: ${PGRST_JWT_SECRET_IS_BASE64:?error}
       PGRST_JWT_AUD: crestfall
       PGRST_LOG_LEVEL: warn
+    depends_on:
+      postgresql:
+        condition: service_healthy
+
+  redis:
+    image: redis:latest
+    network_mode: "host"
+    environment:
+      REDIS_PORT: 6379
+    volumes:
+      - ./volumes/redis/data:/data
+    command: redis-server --save 60 1 --loglevel warning
     depends_on:
       postgresql:
         condition: service_healthy
