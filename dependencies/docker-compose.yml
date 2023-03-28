@@ -1,0 +1,40 @@
+
+version: '3.8'
+
+services:
+
+  postgresql:
+    image: postgres:15
+    restart: "no"
+    network_mode: "host"
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: ${POSTGRES_USER:?error}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?error}
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: 5432
+    volumes:
+      - ./volumes/postgresql/data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready --username=postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgrest:
+    image: postgrest/postgrest
+    restart: "no"
+    network_mode: "host"
+    environment:
+      PGRST_DB_ANON_ROLE: anon
+      PGRST_DB_SCHEMAS: ${PGRST_DB_SCHEMAS:?error}
+      PGRST_DB_EXTRA_SEARCH_PATH: ${PGRST_DB_EXTRA_SEARCH_PATH:?error}
+      PGRST_DB_URI: postgresql://${POSTGRES_USER:?error}:${POSTGRES_PASSWORD:?error}@localhost:5432/postgres
+      PGRST_SERVER_PORT: 5433
+      PGRST_JWT_SECRET: ${PGRST_JWT_SECRET:?error}
+      PGRST_JWT_SECRET_IS_BASE64: ${PGRST_JWT_SECRET_IS_BASE64:?error}
+      PGRST_JWT_AUD: crestfall
+      PGRST_LOG_LEVEL: warn
+    depends_on:
+      postgresql:
+        condition: service_healthy

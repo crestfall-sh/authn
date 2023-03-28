@@ -1,9 +1,13 @@
 # authn
 
+#### Environment
+
+
+
 #### Dependencies
 
-- PostgreSQL
-- PostgREST
+- PostgreSQL at 5432
+- PostgREST at 5433
 
 #### Planned
 

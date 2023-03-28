@@ -5,7 +5,7 @@
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
                 <mxCell id="2" value="AuthN" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="-80" y="80" width="120" height="40" as="geometry"/>
+                    <mxGeometry x="-80" y="160" width="120" height="40" as="geometry"/>
                 </mxCell>
                 <mxCell id="3" value="PostgreSQL" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
                     <mxGeometry x="-80" width="120" height="40" as="geometry"/>
@@ -14,7 +14,7 @@
                     <mxGeometry x="-80" y="40" width="120" height="40" as="geometry"/>
                 </mxCell>
                 <mxCell id="5" value="AuthZ" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-                    <mxGeometry x="-80" y="120" width="120" height="40" as="geometry"/>
+                    <mxGeometry x="-80" y="200" width="120" height="40" as="geometry"/>
                 </mxCell>
                 <mxCell id="12" value="Agent" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
                     <mxGeometry x="280" y="-80" width="120" height="40" as="geometry"/>
@@ -28,11 +28,17 @@
                 <mxCell id="16" value="Docker Container" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
                     <mxGeometry x="160" y="-40" width="120" height="40" as="geometry"/>
                 </mxCell>
-                <mxCell id="18" value="Software" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                <mxCell id="18" value="Softwares" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
                     <mxGeometry x="-80" y="-40" width="120" height="40" as="geometry"/>
                 </mxCell>
                 <mxCell id="19" value="Studio" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
                     <mxGeometry x="400" y="-80" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" value="Notifications" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="-80" y="80" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="Events" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="-80" y="120" width="120" height="40" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>
