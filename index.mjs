@@ -24,6 +24,8 @@ if (env.get('CRESTFALL_ENVIRONMENT') === 'development') {
   console.log({ env });
 }
 
+console.log(process.env);
+
 /**
  * @param {string} email
  * @param {string} password
