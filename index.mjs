@@ -12,6 +12,7 @@ import fs from 'fs';
 import url from 'url';
 import path from 'path';
 import assert from 'assert';
+import * as luxon from 'luxon';
 import * as hs256 from 'modules/hs256.mjs';
 import * as web from 'modules/web.mjs';
 import lenv from 'modules/lenv.mjs';
@@ -23,6 +24,44 @@ lenv(path.join(__dirname, '.env'));
 
 const PGRST_JWT_SECRET = process.env['PGRST_JWT_SECRET'];
 assert(typeof PGRST_JWT_SECRET === 'string');
+console.log({ PGRST_JWT_SECRET });
+
+
+/**
+ * exp: defaults to T + 15 Minutes
+ * sub, role, email, scopes: defaults to null
+ * @param {string} secret_b64
+ * @param {import('modules/hs256').payload} payload_override
+ * @returns {Promise<string>}
+ */
+export const create_token = async (secret_b64, payload_override) => {
+  assert(typeof secret_b64 === 'string');
+  assert(payload_override instanceof Object);
+  /**
+   * @type {import('modules/hs256').header}
+   */
+  const header = { alg: 'HS256', typ: 'JWT' };
+  /**
+   * @type {import('modules/hs256').payload}
+   */
+  const payload = {
+    iat: Math.trunc(luxon.DateTime.now().toSeconds()),
+    nbf: Math.trunc(luxon.DateTime.now().toSeconds()),
+    exp: Math.trunc(luxon.DateTime.now().plus({ minutes: 15 }).toSeconds()),
+    iss: 'crestfall',
+    aud: 'crestfall',
+    sub: null,
+    role: null,
+    email: null,
+    scopes: null,
+  };
+  Object.assign(payload, payload_override);
+  const token = hs256.create_token(header, payload, secret_b64);
+  return token;
+};
+
+const token = await create_token(PGRST_JWT_SECRET, { exp: null, role: 'admin' });
+console.log({ token });
 
 /**
  * @param {string} email

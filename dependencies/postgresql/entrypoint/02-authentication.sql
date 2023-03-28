@@ -53,3 +53,16 @@ AS $$
 		(current_setting('request.jwt.claims', true)::jsonb ->> 'email')
 	)::text
 $$;
+
+CREATE ROLE admin NOINHERIT CREATEROLE LOGIN;
+ALTER ROLE admin SET search_path TO private;
+
+GRANT ALL PRIVILEGES ON SCHEMA private TO admin;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA private TO admin;
+GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA private TO admin;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA private TO admin;
+
+ALTER TABLE private.users OWNER TO admin;
+ALTER FUNCTION private.sub OWNER TO admin;
+ALTER FUNCTION private.role OWNER TO admin;
+ALTER FUNCTION private.email OWNER TO admin;
