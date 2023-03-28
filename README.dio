@@ -5,7 +5,7 @@
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
                 <mxCell id="2" value="AuthN" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="-200" y="200" width="120" height="40" as="geometry"/>
+                    <mxGeometry x="-200" y="160" width="120" height="40" as="geometry"/>
                 </mxCell>
                 <mxCell id="3" value="PostgreSQL" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
                     <mxGeometry x="-80" width="120" height="40" as="geometry"/>
@@ -14,7 +14,7 @@
                     <mxGeometry x="-80" y="40" width="120" height="40" as="geometry"/>
                 </mxCell>
                 <mxCell id="5" value="AuthZ" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-                    <mxGeometry x="-200" y="240" width="120" height="40" as="geometry"/>
+                    <mxGeometry x="-200" y="200" width="120" height="40" as="geometry"/>
                 </mxCell>
                 <mxCell id="12" value="Agent" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
                     <mxGeometry x="280" y="-80" width="120" height="40" as="geometry"/>
@@ -41,10 +41,13 @@
                     <mxGeometry x="-80" y="120" width="120" height="40" as="geometry"/>
                 </mxCell>
                 <mxCell id="23" value="Logs" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-                    <mxGeometry x="-80" y="160" width="120" height="40" as="geometry"/>
+                    <mxGeometry x="-200" y="280" width="120" height="40" as="geometry"/>
                 </mxCell>
                 <mxCell id="24" value="Studio" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-                    <mxGeometry x="-320" y="280" width="120" height="40" as="geometry"/>
+                    <mxGeometry x="-320" y="320" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" value="Storage" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="-200" y="240" width="120" height="40" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>
