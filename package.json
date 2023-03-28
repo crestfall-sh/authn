@@ -8,8 +8,7 @@
     "eslint": "^8.3.0"
   },
   "dependencies": {
-    "modules": "github:crestfall-sh/modules",
-    "postgres": "^3.3.4"
+    "modules": "github:crestfall-sh/modules"
   },
   "scripts": {
     "reinstall-modules": "npm install github:crestfall-sh/modules"

@@ -19,12 +19,10 @@ import lenv from 'modules/lenv.mjs';
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const env = lenv(path.join(__dirname, '.env'));
-if (env.get('CRESTFALL_ENVIRONMENT') === 'development') {
-  console.log({ env });
-}
+lenv(path.join(__dirname, '.env'));
 
-console.log(process.env);
+const PGRST_JWT_SECRET = process.env['PGRST_JWT_SECRET'];
+assert(typeof PGRST_JWT_SECRET === 'string');
 
 /**
  * @param {string} email
