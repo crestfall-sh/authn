@@ -7,8 +7,7 @@ if [ -z "$CRESTFALL_ENVIRONMENT" ]; then
 fi
 
 echo "--> Removing .env file symlink."
-rm -f ./client/.env
-rm -f ./server/.env
+rm -f ./dependencies/.env
 
 echo "--> Removing .env file."
 rm -f ./.env
@@ -30,7 +29,7 @@ echo "POSTGRES_USER=postgres" >> .env
 echo "POSTGRES_PASSWORD=$CRESTFALL_HEX_SECRET" >> .env
 
 # PostgREST
-echo "PGRST_DB_SCHEMAS=public" >> .env
+echo "PGRST_DB_SCHEMAS=public,private" >> .env
 echo "PGRST_DB_EXTRA_SEARCH_PATH=public" >> .env
 echo "PGRST_JWT_SECRET=$CRESTFALL_BASE64_SECRET" >> .env
 echo "PGRST_JWT_SECRET_IS_BASE64=true" >> .env

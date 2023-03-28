@@ -1,13 +1,13 @@
 # authn
 
-#### Environment
+#### Completed
 
-
-
-#### Dependencies
-
-- PostgreSQL at 5432
-- PostgREST at 5433
+- PostgreSQL dependency
+- PostgREST dependency
+- Redis dependency
+- Loading of .env files into process.env
+- Redis client connection test
+- PostgREST JWT test
 
 #### Planned
 
