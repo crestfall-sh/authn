@@ -37,7 +37,7 @@ jobs:
           --health-timeout 5s
           --health-retries 5
         volumes:
-          - /dependencies/postgresql/entrypoint:/docker-entrypoint-initdb.d
+          - /home/runner/work/authn/authn/dependencies/postgresql/entrypoint:/docker-entrypoint-initdb.d
       postgrest:
         image: postgrest/postgrest:latest
         ports:
