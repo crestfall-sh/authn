@@ -2,6 +2,7 @@
 
 import assert from 'assert';
 import crypto from 'crypto';
+import * as web from 'modules/web.mjs';
 import * as hs256 from 'modules/hs256.mjs';
 import * as tokens from './utils/tokens.mjs';
 import * as index from './index.mjs';
@@ -9,7 +10,7 @@ import * as index from './index.mjs';
 const PGRST_JWT_SECRET = index.PGRST_JWT_SECRET;
 
 {
-  console.log('Test: tokens');
+  console.log('Test: tokens..');
   const user_tokens = await tokens.create_user_tokens(PGRST_JWT_SECRET, {
     sub: 'example-uuid',
   });
@@ -25,12 +26,16 @@ const PGRST_JWT_SECRET = index.PGRST_JWT_SECRET;
     assert(typeof user_tokens2.refresh_token === 'string');
     hs256.verify_sig(user_tokens2.access_token, PGRST_JWT_SECRET);
   }
+  console.log('Test: tokens OK.');
 }
 
 {
-  console.log('Test: sign-up');
+  console.log('Test: sign-up..');
   const email = crypto.randomBytes(4).toString('hex').concat('@example.com');
   const password = crypto.randomBytes(4).toString('hex');
   const user = await index.email_sign_up(email, password);
   assert(user instanceof Object);
+  console.log('Test: sign-up OK.');
 }
+
+web.uws.us_listen_socket_close(index.app_token);

@@ -4,8 +4,8 @@ import url from 'url';
 import path from 'path';
 import assert from 'assert';
 import crypto from 'crypto';
-import * as web from 'modules/web.mjs';
 import lenv from 'modules/lenv.mjs';
+import * as web from 'modules/web.mjs';
 import * as casefold from 'modules/casefold.mjs';
 import * as scrypt from './utils/scrypt.mjs';
 import * as tokens from './utils/tokens.mjs';
@@ -95,4 +95,4 @@ export const email_sign_up = async (email, password) => {
 
 const app = web.uws.App({});
 
-web.http(app, web.port_access_types.EXCLUSIVE, 8080);
+export const app_token = await web.http(app, web.port_access_types.EXCLUSIVE, 8080);
