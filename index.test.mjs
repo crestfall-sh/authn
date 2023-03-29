@@ -6,6 +6,7 @@ import * as web from 'modules/web.mjs';
 import * as hs256 from 'modules/hs256.mjs';
 import * as tokens from './utils/tokens.mjs';
 import * as index from './index.mjs';
+import redis_client from './utils/redis_client.mjs';
 
 const PGRST_JWT_SECRET = index.PGRST_JWT_SECRET;
 
@@ -38,4 +39,10 @@ const PGRST_JWT_SECRET = index.PGRST_JWT_SECRET;
   console.log('Test: sign-up OK.');
 }
 
+console.log('Closing HTTP server..');
 web.uws.us_listen_socket_close(index.app_token);
+
+console.log('Closing redis client..');
+redis_client.connection.end();
+
+console.log('OK.');
