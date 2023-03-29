@@ -40,6 +40,7 @@ services:
       postgresql:
         condition: service_healthy
 
+  # sudo docker run -it --net=host --rm redis redis-cli
   redis:
     image: redis:latest
     network_mode: "host"
