@@ -49,15 +49,15 @@ jobs:
           --health-retries 5
     steps:
 
-    - name: Create .env file
-      run: bash ./env.sh
-
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v2
       with:
         cache: 'npm'
         node-version: ${{ matrix.node-version }}
+
+    - name: Create .env file
+      run: bash ./env.sh
 
     - name: Install dependencies
       run: npm install
