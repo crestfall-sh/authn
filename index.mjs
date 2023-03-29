@@ -16,7 +16,7 @@ import * as web from 'modules/web.mjs';
 import * as hs256 from 'modules/hs256.mjs';
 import lenv from 'modules/lenv.mjs';
 import hs256_create_token from './utils/hs256_create_token.mjs';
-import postgrest_request from './utils/postgrest_request.mjs';
+import * as postgrest from './utils/postgrest.mjs';
 
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -38,17 +38,15 @@ const admin_token = await hs256_create_token(PGRST_JWT_SECRET, { exp: null, role
 console.log({ admin_token });
 console.log(hs256.read_token(admin_token));
 
+postgrest.default_options.token = admin_token;
+postgrest.default_options.headers['Accept-Profile'] = 'private';
+postgrest.default_options.headers['Content-Profile'] = 'private';
+
 {
   const email = 'user@example.com';
-  const response = await postgrest_request({
-    protocol: 'http',
-    hostname: 'localhost',
-    port: 5433,
-    token: admin_token,
+  const response = await postgrest.request({
     pathname: '/users',
     search: { email: `eq.${email}` },
-    method: 'GET',
-    headers: { 'Accept-Profile': 'private', 'Content-Profile': 'private' },
   });
   console.log({ response });
 }
