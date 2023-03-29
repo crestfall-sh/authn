@@ -83,3 +83,7 @@ const phone_sign_up = async (phone, password) => {
   // check if password length is ideal.
   return null;
 };
+
+const app = web.uws.App({});
+
+web.http(app, web.port_access_types.EXCLUSIVE, 8080);
