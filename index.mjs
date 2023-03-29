@@ -1,12 +1,10 @@
 // @ts-check
 
-import fs from 'fs';
 import url from 'url';
 import path from 'path';
 import assert from 'assert';
 import crypto from 'crypto';
 import * as web from 'modules/web.mjs';
-import * as hs256 from 'modules/hs256.mjs';
 import lenv from 'modules/lenv.mjs';
 import * as casefold from 'modules/casefold.mjs';
 import * as scrypt from './utils/scrypt.mjs';
@@ -20,7 +18,7 @@ const __dirname = path.dirname(__filename);
 lenv(path.join(__dirname, '.env'));
 
 // load PGRST_JWT_SECRET
-const PGRST_JWT_SECRET = process.env['PGRST_JWT_SECRET'];
+export const PGRST_JWT_SECRET = process.env['PGRST_JWT_SECRET'];
 assert(typeof PGRST_JWT_SECRET === 'string');
 
 // set postgrest default options
@@ -28,34 +26,15 @@ postgrest.default_options.token = await tokens.create_admin_token(PGRST_JWT_SECR
 postgrest.default_options.headers['Accept-Profile'] = 'private';
 postgrest.default_options.headers['Content-Profile'] = 'private';
 
-{
-  const user_tokens = await tokens.create_user_tokens(PGRST_JWT_SECRET, {
-    sub: 'example-uuid',
-  });
-  console.log({ user_tokens });
-  console.log(hs256.read_token(user_tokens.access_token));
-  {
-    await new Promise((resolve) => setTimeout(resolve, 2500));
-    const user_tokens2 = await tokens.use_refresh_token(PGRST_JWT_SECRET, user_tokens.refresh_token);
-    console.log({ user_tokens2 });
-    console.log(hs256.read_token(user_tokens2.access_token));
-  }
-}
-
-
-
 /**
- * @param {string} email
- * @param {string} password
- * @returns {Promise<void>}
+ * @type {import('./index').email_sign_up}
  */
-const email_sign_up = async (email, password) => {
+export const email_sign_up = async (email, password) => {
   assert(typeof email === 'string');
   assert(typeof password === 'string');
-
+  assert(password.length >= 8, 'Invalid password, must be at least eight (8) characters.');
   const email_normalized = casefold.full_casefold_normalize_nfkc(email);
   const password_normalized = password.normalize('NFKC');
-
   {
     // Check if email is already used
     const response = await postgrest.request({
@@ -103,7 +82,6 @@ const email_sign_up = async (email, password) => {
     assert(response.body instanceof Array);
     const inserted_user = response.body[0];
     assert(inserted_user instanceof Object);
-    console.log({ inserted_user });
     Object.assign(user, inserted_user);
     user.email_verification_code = null;
     user.email_recovery_code = null;
@@ -111,38 +89,8 @@ const email_sign_up = async (email, password) => {
     user.phone_recovery_code = null;
     user.password_salt = null;
     user.password_hash = null;
-    console.log({ user });
+    return user;
   }
-
-  // check if email is valid string
-  // normalize email
-  // check if email is unused
-  // check if password length is ideal.
-
-  return null;
-};
-
-{
-  console.log('Signing-up..');
-  const email = crypto.randomBytes(4).toString('hex').concat('@example.com');
-  const password = crypto.randomBytes(4).toString('hex');
-  console.log({ email, password });
-  email_sign_up(email, password);
-}
-
-/**
- * @param {string} phone
- * @param {string} password
- * @returns {Promise<void>}
- */
-const phone_sign_up = async (phone, password) => {
-  assert(typeof phone === 'string');
-  assert(typeof password === 'string');
-  // check if phone is valid string
-  // normalize phone
-  // check if phone is unused
-  // check if password length is ideal.
-  return null;
 };
 
 const app = web.uws.App({});

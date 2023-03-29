@@ -16,3 +16,5 @@ export interface user {
   updated_at: string;
   metadata: Record<string, string|number|boolean>;
 }
+
+export type email_sign_up = (email: string, password: string) => Promise<user>;
