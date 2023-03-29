@@ -31,17 +31,12 @@ jobs:
         cache: 'npm'
         node-version: ${{ matrix.node-version }}
 
-    - name: pwd
-      run: pwd
-
-    - name: ls
-      run: ls
-
-    - name: docker --version
-      run: docker --version
-
     - name: Create .env file
-      run: bash ./env.test.sh
+      run: bash ./env.sh
+
+    - name: Run docker containers
+      run: docker compose up --build --force-recreate
+      working-directory: ./dependencies
 
     - name: Install dependencies
       run: npm install
