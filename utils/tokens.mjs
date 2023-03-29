@@ -82,8 +82,11 @@ export const create_user_tokens = async (secret_b64, payload_override) => {
  * @param {string} refresh_token
  */
 export const use_refresh_token = async (secret_b64, refresh_token) => {
-  const refresh_token_sub = await redis.exec(redis_client, 'GET', refresh_token);
-  assert(typeof refresh_token_sub === 'string');
+  const get_response = await redis.exec(redis_client, 'GET', refresh_token);
+  assert(typeof get_response === 'string');
+  const del_response = await redis.exec(redis_client, 'DEL', refresh_token);
+  assert(del_response === 1);
+  const refresh_token_sub = get_response;
   const user_tokens = await create_user_tokens(secret_b64, { sub: refresh_token_sub });
   return user_tokens;
 };
