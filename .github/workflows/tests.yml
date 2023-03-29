@@ -17,11 +17,11 @@ on:
 jobs:
   build:
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 5
+    timeout-minutes: 2
     strategy:
       matrix:
-        os: [ubuntu-latest] # macos-latest, windows-latest
-        node-version: [18.x] # uWebSockets has blacklisted 16.x
+        os: [ubuntu-latest]
+        node-version: [18.x]
     services:
       postgresql:
         image: postgres:latest
@@ -44,9 +44,9 @@ jobs:
           - 5433:5433
         env:
           PGRST_DB_ANON_ROLE: "anon"
-          PGRST_DB_SCHEMAS: "public, private"
+          PGRST_DB_SCHEMAS: "public,private"
           PGRST_DB_EXTRA_SEARCH_PATH: "public"
-          PGRST_DB_URI: postgresql://postgres:postgres@localhost:5432/postgres
+          PGRST_DB_URI: "postgresql://postgres:postgres@localhost:5432/postgres"
           PGRST_SERVER_PORT: "5433"
           PGRST_JWT_SECRET: "4JLbS4XURTDIxQI6/2Rdw5pEkDuRxwjRZ6h0hsRxuIk="
           PGRST_JWT_SECRET_IS_BASE64: "true"
