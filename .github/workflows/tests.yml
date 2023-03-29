@@ -17,7 +17,7 @@ on:
 jobs:
   build:
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 2
+    timeout-minutes: 5
     strategy:
       matrix:
         os: [ubuntu-latest]
@@ -35,7 +35,7 @@ jobs:
       run: bash ./env.sh
 
     - name: Run docker containers
-      run: docker compose up --build --force-recreate
+      run: docker compose up --build --force-recreate --detach
       working-directory: ./dependencies
 
     - name: Install dependencies
