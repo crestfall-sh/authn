@@ -7,12 +7,14 @@
 import assert from 'assert';
 import _ from 'lodash';
 
+const POSTGREST_HOST = process.env['POSTGREST_HOST'] || 'localhost';
+
 /**
  * @type {import('./postgrest').options}
  */
 export const default_options = {
   protocol: 'http',
-  hostname: 'localhost',
+  hostname: POSTGREST_HOST,
   port: 5433,
   pathname: null,
   method: 'GET',

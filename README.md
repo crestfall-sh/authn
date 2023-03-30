@@ -21,10 +21,10 @@ export GHCR_ACCESS_TOKEN=XYZ
 echo $GHCR_ACCESS_TOKEN | sudo docker login ghcr.io -u joshxyzhimself --password-stdin
 ```
 
-3. Build your Docker image.
+3. Build your Docker Image.
 
 ```sh
-sudo docker build --tag=authn ./
+sudo docker build --tag=ghcr.io/crestfall-sh/authn ./
 ```
 
 4. Run your Docker Container (for testing)
@@ -36,13 +36,20 @@ sudo docker compose up
 
 ```sh
 # at ./
-sudo docker run -it --network=host --name=authn --env PGRST_JWT_SECRET=4JLbS4XURTDIxQI6/2Rdw5pEkDuRxwjRZ6h0hsRxuIk= authn
-sudo docker run -it --network=host --name=authn authn
-sudo docker run --detach --network=host --name=authn authn
+sudo docker run --detach --network=host --name=authn --env PGRST_JWT_SECRET=4JLbS4XURTDIxQI6/2Rdw5pEkDuRxwjRZ6h0hsRxuIk= ghcr.io/crestfall-sh/authn
 sudo docker kill authn
 sudo docker rm authn
-sudo docker container prune --force
 ```
+
+5. Push your Docker Image to GitHub Container Registry.
+
+```sh
+sudo docker push ghcr.io/crestfall-sh/authn:latest
+```
+
+5. Check your Docker Image in GitHub Container Registry.
+
+- https://github.com/orgs/crestfall-sh/packages
 
 #### License
 

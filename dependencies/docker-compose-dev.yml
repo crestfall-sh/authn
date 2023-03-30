@@ -1,9 +1,8 @@
 
-# docker-compose.yml
-# This Docker Compose YAML file shows an example usage of authn server.
-# The network "crestfall-network" is used to give it access to PostgREST and Redis.
+# docker-compose-dev.yml
+# This Docker Compose YAML file is for development purposes.
 #
-# sudo docker compose up --build --force-recreate
+# sudo docker compose --file=./docker-compose-dev.yml up --build --force-recreate
 #
 
 version: '3.8'
@@ -29,8 +28,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    networks:
-      - crestfall-network
 
   postgrest:
     image: postgrest/postgrest:latest
@@ -52,9 +49,8 @@ services:
     depends_on:
       postgresql:
         condition: service_healthy
-    networks:
-      - crestfall-network
 
+  # sudo docker run -it --net=host --rm redis redis-cli
   redis:
     image: redis:latest
     restart: "no"
@@ -68,23 +64,3 @@ services:
     depends_on:
       postgresql:
         condition: service_healthy
-    networks:
-      - crestfall-network
-  
-  authn:
-    image: ghcr.io/crestfall-sh/authn:latest
-    restart: "no"
-    ports:
-      - 8080:8080
-    environment:
-      PGRST_JWT_SECRET: ${PGRST_JWT_SECRET:?error}
-      POSTGREST_HOST: "postgrest"
-      REDIS_HOST: "redis"
-    depends_on:
-      postgresql:
-        condition: service_healthy
-    networks:
-      - crestfall-network
-
-networks:
-  crestfall-network:
