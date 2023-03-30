@@ -1,5 +1,6 @@
 // @ts-check
 
+import fs from 'fs';
 import url from 'url';
 import path from 'path';
 import assert from 'assert';
@@ -14,14 +15,26 @@ import * as postgrest from './utils/postgrest.mjs';
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// load .env into process.env
-lenv(path.join(__dirname, '.env'));
+export const NODE_ENV = process.env['NODE_ENV'] || 'development';
+if (NODE_ENV === 'development') {
+  /**
+   * Load .env into process.env. For development purposes only.
+   */
+  const env_path = path.join(__dirname, '.env');
+  if (fs.existsSync(env_path) === true) {
+    lenv(path.join(__dirname, '.env'));
+  }
+}
 
-// load PGRST_JWT_SECRET
+/**
+ * Load PGRST_JWT_SECRET from process.env.
+ */
 export const PGRST_JWT_SECRET = process.env['PGRST_JWT_SECRET'];
-assert(typeof PGRST_JWT_SECRET === 'string');
+assert(typeof PGRST_JWT_SECRET === 'string', 'PGRST_JWT_SECRET environment variable is missing.');
 
-// set postgrest default options
+/**
+ * Set PostgREST client default options.
+ */
 postgrest.default_options.token = await tokens.create_admin_token(PGRST_JWT_SECRET);
 postgrest.default_options.headers['Accept-Profile'] = 'private';
 postgrest.default_options.headers['Content-Profile'] = 'private';

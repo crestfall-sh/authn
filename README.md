@@ -36,7 +36,12 @@ sudo docker compose up
 
 ```sh
 # at ./
+sudo docker run -it --network=host --name=authn --env PGRST_JWT_SECRET=4JLbS4XURTDIxQI6/2Rdw5pEkDuRxwjRZ6h0hsRxuIk= authn
+sudo docker run -it --network=host --name=authn authn
 sudo docker run --detach --network=host --name=authn authn
+sudo docker kill authn
+sudo docker rm authn
+sudo docker container prune --force
 ```
 
 #### License
