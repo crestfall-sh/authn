@@ -7,10 +7,6 @@ on:
 jobs:
   build-deploy-docs:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
-        working-directory: ./docs/
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -19,6 +15,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           cache: 'npm'
+          node-version: 18
 
       - name: npm install
         run: npm install
