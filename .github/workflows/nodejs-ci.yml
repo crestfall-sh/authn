@@ -35,7 +35,7 @@ jobs:
       run: bash ./env.sh
 
     - name: Run docker containers
-      run: docker compose up --build --force-recreate --detach
+      run: docker compose --file=./docker-compose-dev.yml up --build --force-recreate --detach
       working-directory: ./dependencies
 
     - name: Install dependencies
