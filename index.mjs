@@ -144,11 +144,34 @@ export const email_sign_in = async (email, password) => {
 
 const app = web.uws.App({});
 
-app.post('/sign-up/email', web.use(async (response, request) => {
-  // ...
-}));
-app.post('/sign-in/email', web.use(async (response, request) => {
-  // ...
-}));
+/**
+ * @type {import('./index').email_sign_up_middleware}
+ */
+const email_sign_up_middleware = async (response, request) => {
+  response.error_write_message = true;
+  assert(request.json instanceof Object);
+  assert(typeof request.json.email === 'string');
+  assert(typeof request.json.password === 'string');
+  const email = request.json.email;
+  const password = request.json.password;
+  const session = await email_sign_up(email, password);
+  response.json = { session };
+};
+app.post('/sign-up/email', web.use(email_sign_up_middleware));
+
+/**
+ * @type {import('./index').email_sign_in_middleware}
+ */
+const email_sign_in_middleware = async (response, request) => {
+  response.error_write_message = true;
+  assert(request.json instanceof Object);
+  assert(typeof request.json.email === 'string');
+  assert(typeof request.json.password === 'string');
+  const email = request.json.email;
+  const password = request.json.password;
+  const session = await email_sign_in(email, password);
+  response.json = { session };
+};
+app.post('/sign-in/email', web.use(email_sign_in_middleware));
 
 export const app_token = await web.http(app, web.port_access_types.EXCLUSIVE, 8080);

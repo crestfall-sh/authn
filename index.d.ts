@@ -1,3 +1,5 @@
+import * as web from 'modules/web';
+
 export interface user {
   id: string;
   email: string;
@@ -24,4 +26,6 @@ export interface session {
 }
 
 export type email_sign_up = (email: string, password: string) => Promise<session>;
+export type email_sign_up_middleware = web.middleware<{ email: string, password: string }>;
 export type email_sign_in = (email: string, password: string) => Promise<session>;
+export type email_sign_in_middleware = web.middleware<{ email: string, password: string }>;
