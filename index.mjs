@@ -27,6 +27,19 @@ postgrest.default_options.headers['Accept-Profile'] = 'private';
 postgrest.default_options.headers['Content-Profile'] = 'private';
 
 /**
+ * @param {import('./index').user} user
+ */
+const cleanup_user = (user) => {
+  assert(user instanceof Object);
+  user.email_verification_code = null;
+  user.email_recovery_code = null;
+  user.phone_verification_code = null;
+  user.phone_recovery_code = null;
+  user.password_salt = null;
+  user.password_hash = null;
+};
+
+/**
  * @type {import('./index').email_sign_up}
  */
 export const email_sign_up = async (email, password) => {
@@ -36,7 +49,7 @@ export const email_sign_up = async (email, password) => {
   const email_normalized = casefold.full_casefold_normalize_nfkc(email);
   const password_normalized = password.normalize('NFKC');
   {
-    // Check if email is already used
+    // Check if email is used
     const response = await postgrest.request({
       pathname: '/users',
       search: { email: `eq.${email_normalized}` },
@@ -83,16 +96,59 @@ export const email_sign_up = async (email, password) => {
     const inserted_user = response.body[0];
     assert(inserted_user instanceof Object);
     Object.assign(user, inserted_user);
-    user.email_verification_code = null;
-    user.email_recovery_code = null;
-    user.phone_verification_code = null;
-    user.phone_recovery_code = null;
-    user.password_salt = null;
-    user.password_hash = null;
-    return user;
+    cleanup_user(user);
+    const { access_token, refresh_token } = await tokens.create_user_tokens(PGRST_JWT_SECRET, { sub: user.id });
+    const session = { user, access_token, refresh_token };
+    return session;
+  }
+};
+
+
+/**
+ * @type {import('./index').email_sign_in}
+ */
+export const email_sign_in = async (email, password) => {
+  assert(typeof email === 'string');
+  assert(typeof password === 'string');
+  assert(password.length >= 8, 'Invalid password, must be at least eight (8) characters.');
+  const email_normalized = casefold.full_casefold_normalize_nfkc(email);
+  const password_normalized = password.normalize('NFKC');
+  {
+    // Check if email is used
+    const response = await postgrest.request({
+      pathname: '/users',
+      search: { email: `eq.${email_normalized}` },
+    });
+    assert(response.status === 200, 'ERR_PGRST_INVALID_RESPONSE_STATUS');
+    assert(response.body instanceof Array, 'ERR_PGRST_INVALID_RESPONSE_BODY');
+    assert(response.body.length === 1, 'ERR_INVALID_CREDENTIALS');
+    {
+      // Check if password is correct
+      /**
+       * @type {import('./index').user}
+       */
+      const user = response.body[0];
+      assert(user instanceof Object);
+      assert(typeof user.password_salt === 'string');
+      assert(typeof user.password_hash === 'string');
+      const user_password_key_buffer = Buffer.from(user.password_hash, 'hex');
+      const password_key_buffer = scrypt.derive(password_normalized, user.password_salt);
+      assert(scrypt.compare(user_password_key_buffer, password_key_buffer) === true, 'ERR_INVALID_CREDENTIALS');
+      cleanup_user(user);
+      const { access_token, refresh_token } = await tokens.create_user_tokens(PGRST_JWT_SECRET, { sub: user.id });
+      const session = { user, access_token, refresh_token };
+      return session;
+    }
   }
 };
 
 const app = web.uws.App({});
+
+app.post('/sign-up/email', web.use(async (response, request) => {
+  // ...
+}));
+app.post('/sign-in/email', web.use(async (response, request) => {
+  // ...
+}));
 
 export const app_token = await web.http(app, web.port_access_types.EXCLUSIVE, 8080);

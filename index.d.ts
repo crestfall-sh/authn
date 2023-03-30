@@ -17,4 +17,11 @@ export interface user {
   metadata: Record<string, string|number|boolean>;
 }
 
-export type email_sign_up = (email: string, password: string) => Promise<user>;
+export interface session {
+  user: user;
+  access_token: string;
+  refresh_token: string;
+}
+
+export type email_sign_up = (email: string, password: string) => Promise<session>;
+export type email_sign_in = (email: string, password: string) => Promise<session>;

@@ -31,12 +31,28 @@ const PGRST_JWT_SECRET = index.PGRST_JWT_SECRET;
 }
 
 {
-  console.log('Test: sign-up..');
   const email = crypto.randomBytes(4).toString('hex').concat('@example.com');
   const password = crypto.randomBytes(4).toString('hex');
-  const user = await index.email_sign_up(email, password);
-  assert(user instanceof Object);
-  console.log('Test: sign-up OK.');
+  {
+    console.log('Test: sign-up..');
+    const session = await index.email_sign_up(email, password);
+    assert(session instanceof Object);
+    assert(session.user instanceof Object);
+    assert(typeof session.access_token === 'string');
+    assert(typeof session.refresh_token === 'string');
+    hs256.verify_sig(session.access_token, PGRST_JWT_SECRET);
+    console.log('Test: sign-up OK.');
+  }
+  {
+    console.log('Test: sign-in..');
+    const session = await index.email_sign_in(email, password);
+    assert(session instanceof Object);
+    assert(session.user instanceof Object);
+    assert(typeof session.access_token === 'string');
+    assert(typeof session.refresh_token === 'string');
+    hs256.verify_sig(session.access_token, PGRST_JWT_SECRET);
+    console.log('Test: sign-in OK.');
+  }
 }
 
 console.log('Closing HTTP server..');
