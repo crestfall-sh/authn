@@ -8,6 +8,106 @@ Crestfall Authentication API
 - PostgREST at port 5433
 - Redis at port 6379
 
+#### Docker Compose Usage
+
+Docker Image tag is `ghcr.io/crestfall-sh/authn:latest`.
+
+```yml
+
+# docker-compose.yml
+# This Docker Compose YAML file shows an example usage of authn server.
+# The network "crestfall-network" is used to give it access to PostgREST and Redis.
+#
+# sudo docker compose up --build --force-recreate
+#
+
+version: '3.8'
+
+services:
+
+  postgresql:
+    image: postgres:latest
+    restart: "no"
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: ${POSTGRES_USER:?error}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?error}
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: 5432
+    volumes:
+      - ./postgresql/entrypoint:/docker-entrypoint-initdb.d
+      - ./volumes/postgresql/data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready --username=postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - crestfall-network
+
+  postgrest:
+    image: postgrest/postgrest:latest
+    restart: "no"
+    ports:
+      - 5433:5433
+    environment:
+      PGRST_DB_ANON_ROLE: anon
+      PGRST_DB_SCHEMAS: ${PGRST_DB_SCHEMAS:?error}
+      PGRST_DB_EXTRA_SEARCH_PATH: ${PGRST_DB_EXTRA_SEARCH_PATH:?error}
+      PGRST_DB_URI: postgresql://${POSTGRES_USER:?error}:${POSTGRES_PASSWORD:?error}@postgresql:5432/postgres
+      PGRST_SERVER_PORT: 5433
+      PGRST_JWT_SECRET: ${PGRST_JWT_SECRET:?error}
+      PGRST_JWT_SECRET_IS_BASE64: ${PGRST_JWT_SECRET_IS_BASE64:?error}
+      PGRST_JWT_AUD: crestfall
+      PGRST_LOG_LEVEL: warn
+    depends_on:
+      postgresql:
+        condition: service_healthy
+    networks:
+      - crestfall-network
+
+  redis:
+    image: redis:latest
+    restart: "no"
+    ports:
+      - 6379:6379
+    environment:
+      REDIS_PORT: 6379
+    volumes:
+      - ./volumes/redis/data:/data
+    command: redis-server --save 60 1 --loglevel warning
+    depends_on:
+      postgresql:
+        condition: service_healthy
+    networks:
+      - crestfall-network
+  
+  authn:
+    image: ghcr.io/crestfall-sh/authn:latest
+    restart: "no"
+    ports:
+      - 8080:8080
+    environment:
+      PGRST_JWT_SECRET: ${PGRST_JWT_SECRET:?error}
+      POSTGREST_HOST: "postgrest"
+      REDIS_HOST: "redis"
+    depends_on:
+      postgresql:
+        condition: service_healthy
+    networks:
+      - crestfall-network
+
+networks:
+  crestfall-network:
+
+```
+
+#### API Documentation
+
+To do.
+
 #### Development
 
 Publishing at GitHub Container Registry

@@ -47,8 +47,6 @@ services:
       PGRST_JWT_SECRET_IS_BASE64: ${PGRST_JWT_SECRET_IS_BASE64:?error}
       PGRST_JWT_AUD: crestfall
       PGRST_LOG_LEVEL: warn
-    links:
-      - "postgresql:postgresql"
     depends_on:
       postgresql:
         condition: service_healthy
