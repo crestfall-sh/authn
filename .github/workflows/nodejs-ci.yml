@@ -23,8 +23,9 @@ jobs:
         os: [ubuntu-latest]
         node-version: [18.x, 19.x]
     steps:
+    - name: checkout
+      uses: actions/checkout@v3
 
-    - uses: actions/checkout@v3
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
@@ -43,3 +44,4 @@ jobs:
 
     - name: Run test
       run: node ./index.test.mjs
+

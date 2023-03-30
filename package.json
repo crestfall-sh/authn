@@ -13,6 +13,7 @@
     "modules": "github:crestfall-sh/modules"
   },
   "scripts": {
-    "reinstall-modules": "npm install github:crestfall-sh/modules"
+    "reinstall-modules": "npm install github:crestfall-sh/modules",
+    "docs": "npx typedoc"
   }
 }
