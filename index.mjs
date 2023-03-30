@@ -174,4 +174,9 @@ const email_sign_in_middleware = async (response, request) => {
 };
 app.post('/sign-in/email', web.use(email_sign_in_middleware));
 
+app.get('/', web.use(async (response) => {
+  response.text = 'Crestfall Authentication API';
+}));
+
 export const app_token = await web.http(app, web.port_access_types.EXCLUSIVE, 8080);
+console.log('Listening at port 8080.');
