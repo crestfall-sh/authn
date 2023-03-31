@@ -53,7 +53,7 @@ Content-Type: application/json; charset=utf-8
 }
 ```
 
-2. Receive the user's `session` data, containing the `user` object, `access_token`, and `refresh_token` .
+2. Your server receives the user's `session` data, containing the `user` object, `access_token`, and `refresh_token` .
 
 ```
 HTTP/1.1 200 OK
