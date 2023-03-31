@@ -10,7 +10,7 @@ This includes account sign-up, sign-in, verification, and recovery. It takes adv
 
 If you have any recommendations, improvements, or suggestions, please reach out on any channel available (Twitter, GitHub Issues, etc).
 
-#### Getting Started
+## Getting Started
 
 Crestfall Authentication API depends on PostgreSQL, PostgREST, and Redis.
 
@@ -35,7 +35,7 @@ cd ./dependencies/
 docker compose up --build --force-recreate
 ```
 
-#### User Sign-up
+## User Sign-up
 
 This [Node.js Script](./index.test.mjs) shows an example usage of the API.
 
@@ -89,11 +89,11 @@ Content-Type: application/json; charset=utf-8
 
 3. You may now use the `user` object, `access_token`, and `refresh_token` in your web app client or mobile app client.
 
-#### API Documentation
+## API Documentation
 
 TypeScript Documentation is available at https://crestfall-sh.github.io/authn/.
 
-#### Development
+## Development
 
 Publishing at GitHub Container Registry
 
@@ -136,6 +136,6 @@ sudo docker push ghcr.io/crestfall-sh/authn:latest
 
 - https://github.com/orgs/crestfall-sh/packages
 
-#### License
+## License
 
 MIT
