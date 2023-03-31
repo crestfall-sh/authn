@@ -49,7 +49,7 @@ Content-Type: application/json; charset=utf-8
 ```js
 {
   "email": "alice@example.com",
-  "password": "correcthorsebatterystaple"
+  "password": "CorrectHorseBatteryStaple" // https://xkcd.com/936/
 }
 ```
 
