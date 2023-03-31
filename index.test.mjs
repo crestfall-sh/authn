@@ -92,6 +92,7 @@ const PGRST_JWT_SECRET = index.PGRST_JWT_SECRET;
     assert(response_body.session.user instanceof Object);
     assert(typeof response_body.session.access_token === 'string');
     assert(typeof response_body.session.refresh_token === 'string');
+    console.log(JSON.stringify(response_body, null, 2));
     console.log('Test: HTTP sign-in OK.');
   }
 }

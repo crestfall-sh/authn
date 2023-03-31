@@ -1,112 +1,95 @@
 # authn
 
-Crestfall Authentication API
+Crestfall Authentication API is an open-source authentication server that provides identity management for your apps.
 
-#### Requirements
+This includes account sign-up, sign-in, verification, and recovery. It takes advantage of the best resources on recommended security practices so you don't have to worry about it.
 
-- PostgreSQL at port 5432
-- PostgREST at port 5433
-- Redis at port 6379
+- [OWASP Cheat Sheet Series](https://cheatsheetseries.owasp.org/)
+- [Cryptographic Right Answers](https://latacora.micro.blog/2018/04/03/cryptographic-right-answers.html)
+- [Password Authentication for Web and Mobile Apps](https://dchest.com/authbook/)
 
-#### Docker Compose Usage
+If you have any recommendations, improvements, or suggestions, please reach us on any channel available (Twitter, GitHub Issues, etc).
 
-Docker Image tag is `ghcr.io/crestfall-sh/authn:latest`.
+#### Getting Started
 
-```yml
+Crestfall Authentication API depends on PostgreSQL, PostgREST, and Redis.
 
-# docker-compose.yml
-# This Docker Compose YAML file shows an example usage of authn server.
-# The network "crestfall-network" is used to give it access to PostgREST and Redis.
-#
-# sudo docker compose up --build --force-recreate
-#
+The Docker Image Tag is: `ghcr.io/crestfall-sh/authn:latest`.
 
-version: '3.8'
+This [Docker Compose YAML File](./dependencies//docker-compose.yml) is provided as a reference for a docker-based setup.
 
-services:
+This [Environment File Shell Script](./env.sh) is provided as a reference for creating a `.env` file.
 
-  postgresql:
-    image: postgres:latest
-    restart: "no"
-    ports:
-      - 5432:5432
-    environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: ${POSTGRES_USER:?error}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?error}
-      POSTGRES_HOST: localhost
-      POSTGRES_PORT: 5432
-    volumes:
-      - ./postgresql/entrypoint:/docker-entrypoint-initdb.d
-      - ./volumes/postgresql/data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready --username=postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - crestfall-network
+Crestfall Authentication API requires the following environment variables:
 
-  postgrest:
-    image: postgrest/postgrest:latest
-    restart: "no"
-    ports:
-      - 5433:5433
-    environment:
-      PGRST_DB_ANON_ROLE: anon
-      PGRST_DB_SCHEMAS: ${PGRST_DB_SCHEMAS:?error}
-      PGRST_DB_EXTRA_SEARCH_PATH: ${PGRST_DB_EXTRA_SEARCH_PATH:?error}
-      PGRST_DB_URI: postgresql://${POSTGRES_USER:?error}:${POSTGRES_PASSWORD:?error}@postgresql:5432/postgres
-      PGRST_SERVER_PORT: 5433
-      PGRST_JWT_SECRET: ${PGRST_JWT_SECRET:?error}
-      PGRST_JWT_SECRET_IS_BASE64: ${PGRST_JWT_SECRET_IS_BASE64:?error}
-      PGRST_JWT_AUD: crestfall
-      PGRST_LOG_LEVEL: warn
-    depends_on:
-      postgresql:
-        condition: service_healthy
-    networks:
-      - crestfall-network
+- `PGRST_JWT_SECRET`: Base64-encoded Secret.
+- `POSTGREST_HOST`: Defaults to `localhost`. The Docker Compose YAML File shows how this environment variable is used.
+- `REDIS_HOST`: Defaults to `localhost`. The Docker Compose YAML File shows how this environment variable is used.
 
-  redis:
-    image: redis:latest
-    restart: "no"
-    ports:
-      - 6379:6379
-    environment:
-      REDIS_PORT: 6379
-    volumes:
-      - ./volumes/redis/data:/data
-    command: redis-server --save 60 1 --loglevel warning
-    depends_on:
-      postgresql:
-        condition: service_healthy
-    networks:
-      - crestfall-network
-  
-  authn:
-    image: ghcr.io/crestfall-sh/authn:latest
-    restart: "no"
-    ports:
-      - 8080:8080
-    environment:
-      PGRST_JWT_SECRET: ${PGRST_JWT_SECRET:?error}
-      POSTGREST_HOST: "postgrest"
-      REDIS_HOST: "redis"
-    depends_on:
-      postgresql:
-        condition: service_healthy
-    networks:
-      - crestfall-network
+To run the Docker Compose YAML File:
 
-networks:
-  crestfall-network:
+```sh
+cd ./dependencies/
+docker compose up --build --force-recreate
+```
+
+#### User Sign-up
+
+This [Node.js Script](./index.test.mjs) shows an example usage of the API.
+
+1. Your server sends the user's credentials to Crestfall Authentication API.
 
 ```
+Request URL: /sign-up/email
+Content-Type: application/json; charset=utf-8
+```
+
+```json
+{
+  "email": "alice@example.com",
+  "password": "correcthorsebatterystaple"
+}
+```
+
+2. Receive the user's `session` data, containing the `user` object, `access_token`, and `refresh_token` .
+
+```
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+```
+
+```json
+{
+  "session": {
+    "user": {
+      "id": "2415e4ae-657a-4b48-94b1-db6c63eae2b6",
+      "email": "alice@example.com",
+      "email_verification_code": null, // hidden
+      "email_verified_at": null,
+      "email_recovery_code": null, // hidden
+      "email_recovered_at": null,
+      "phone": null,
+      "phone_verification_code": null, // hidden
+      "phone_verified_at": null,
+      "phone_recovery_code": null, // hidden
+      "phone_recovered_at": null,
+      "password_salt": null, // hidden
+      "password_hash": null, // hidden
+      "created_at": "2023-03-31T02:02:00.803038+00:00",
+      "updated_at": "2023-03-31T02:02:00.803038+00:00",
+      "metadata": null
+    },
+    "access_token": "eyJhbG...", // JSON Web Token (JWT)
+    "refresh_token": "df2514..." // 256-bit Random String
+  }
+}
+```
+
+3. You may now use the `user` object, `access_token`, and `refresh_token` in your web app client or mobile app client.
 
 #### API Documentation
 
-To do.
+TypeScript Documentation is available at https://crestfall-sh.github.io/authn/.
 
 #### Development
 
