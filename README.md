@@ -46,7 +46,7 @@ Request URL: /sign-up/email
 Content-Type: application/json; charset=utf-8
 ```
 
-```json
+```js
 {
   "email": "alice@example.com",
   "password": "correcthorsebatterystaple"
@@ -60,7 +60,7 @@ HTTP/1.1 200 OK
 Content-Type: application/json; charset=utf-8
 ```
 
-```json
+```js
 {
   "session": {
     "user": {
