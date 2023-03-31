@@ -8,7 +8,7 @@ This includes account sign-up, sign-in, verification, and recovery. It takes adv
 - [Cryptographic Right Answers](https://latacora.micro.blog/2018/04/03/cryptographic-right-answers.html)
 - [Password Authentication for Web and Mobile Apps](https://dchest.com/authbook/)
 
-If you have any recommendations, improvements, or suggestions, please reach us on any channel available (Twitter, GitHub Issues, etc).
+If you have any recommendations, improvements, or suggestions, please reach out on any channel available (Twitter, GitHub Issues, etc).
 
 #### Getting Started
 
@@ -22,9 +22,11 @@ This [Environment File Shell Script](./env.sh) is provided as a reference for cr
 
 Crestfall Authentication API requires the following environment variables:
 
-- `PGRST_JWT_SECRET`: Base64-encoded Secret.
-- `POSTGREST_HOST`: Defaults to `localhost`. The Docker Compose YAML File shows how this environment variable is used.
-- `REDIS_HOST`: Defaults to `localhost`. The Docker Compose YAML File shows how this environment variable is used.
+- `PGRST_JWT_SECRET`: Your base64-encoded secret.
+- `POSTGREST_HOST`: Defaults to `localhost`.
+- `REDIS_HOST`: Defaults to `localhost`.
+
+The Docker Compose YAML File shows how the environment variables are used.
 
 To run the Docker Compose YAML File:
 
