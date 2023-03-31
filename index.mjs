@@ -161,14 +161,27 @@ const app = web.uws.App({});
  * @type {import('./index').email_sign_up_middleware}
  */
 const email_sign_up_middleware = async (response, request) => {
-  response.error_write_message = true;
-  assert(request.json instanceof Object);
-  assert(typeof request.json.email === 'string');
-  assert(typeof request.json.password === 'string');
-  const email = request.json.email;
-  const password = request.json.password;
-  const session = await email_sign_up(email, password);
-  response.json = { session };
+  try {
+    response.error_write_message = true;
+    assert(request.json instanceof Object);
+    assert(typeof request.json.email === 'string');
+    assert(typeof request.json.password === 'string');
+    const email = request.json.email;
+    const password = request.json.password;
+    const session = await email_sign_up(email, password);
+    response.json = { session };
+  } catch (e) {
+    switch (e.message) {
+      case 'ERR_EMAIL_ALREADY_USED': {
+        response.status = 400;
+        response.text = 'ERR_EMAIL_ALREADY_USED';
+        return;
+      }
+      default: {
+        throw e;
+      }
+    }
+  }
 };
 app.post('/sign-up/email', web.use(email_sign_up_middleware));
 
@@ -176,14 +189,27 @@ app.post('/sign-up/email', web.use(email_sign_up_middleware));
  * @type {import('./index').email_sign_in_middleware}
  */
 const email_sign_in_middleware = async (response, request) => {
-  response.error_write_message = true;
-  assert(request.json instanceof Object);
-  assert(typeof request.json.email === 'string');
-  assert(typeof request.json.password === 'string');
-  const email = request.json.email;
-  const password = request.json.password;
-  const session = await email_sign_in(email, password);
-  response.json = { session };
+  try {
+    response.error_write_message = true;
+    assert(request.json instanceof Object);
+    assert(typeof request.json.email === 'string');
+    assert(typeof request.json.password === 'string');
+    const email = request.json.email;
+    const password = request.json.password;
+    const session = await email_sign_in(email, password);
+    response.json = { session };
+  } catch (e) {
+    switch (e.message) {
+      case 'ERR_INVALID_CREDENTIALS': {
+        response.status = 400;
+        response.text = 'ERR_INVALID_CREDENTIALS';
+        return;
+      }
+      default: {
+        throw e;
+      }
+    }
+  }
 };
 app.post('/sign-in/email', web.use(email_sign_in_middleware));
 

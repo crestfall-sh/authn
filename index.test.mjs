@@ -92,8 +92,19 @@ const PGRST_JWT_SECRET = index.PGRST_JWT_SECRET;
     assert(response_body.session.user instanceof Object);
     assert(typeof response_body.session.access_token === 'string');
     assert(typeof response_body.session.refresh_token === 'string');
-    console.log(JSON.stringify(response_body, null, 2));
     console.log('Test: HTTP sign-in OK.');
+  }
+  {
+    console.log('Test: HTTP sign-in with wrong password..');
+    const response = await fetch('http://localhost:8080/sign-in/email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json; charset=utf-8' },
+      body: JSON.stringify({ email, password: 'wrong password' }),
+    });
+    assert(response.status === 400);
+    const response_body = await response.text();
+    assert(response_body === 'ERR_INVALID_CREDENTIALS');
+    console.log('Test: HTTP sign-in with wrong password OK.');
   }
 }
 
