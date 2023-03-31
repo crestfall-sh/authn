@@ -23,7 +23,7 @@
 <li><a href="https://latacora.micro.blog/2018/04/03/cryptographic-right-answers.html">Cryptographic Right Answers</a></li>
 <li><a href="https://dchest.com/authbook/">Password Authentication for Web and Mobile Apps</a></li>
 </ul>
-<p>If you have any recommendations, improvements, or suggestions, please reach us on any channel available (Twitter, GitHub Issues, etc).</p>
+<p>If you have any recommendations, improvements, or suggestions, please reach out on any channel available (Twitter, GitHub Issues, etc).</p>
 
 <a href="#getting-started" id="getting-started" style="color: inherit; text-decoration: none;">
   <h4>Getting Started</h4>
@@ -34,10 +34,11 @@
 <p>This <a href="./env.sh">Environment File Shell Script</a> is provided as a reference for creating a <code>.env</code> file.</p>
 <p>Crestfall Authentication API requires the following environment variables:</p>
 <ul>
-<li><code>PGRST_JWT_SECRET</code>: Base64-encoded Secret.</li>
-<li><code>POSTGREST_HOST</code>: Defaults to <code>localhost</code>. The Docker Compose YAML File shows how this environment variable is used.</li>
-<li><code>REDIS_HOST</code>: Defaults to <code>localhost</code>. The Docker Compose YAML File shows how this environment variable is used.</li>
+<li><code>PGRST_JWT_SECRET</code>: Your base64-encoded secret.</li>
+<li><code>POSTGREST_HOST</code>: Defaults to <code>localhost</code>.</li>
+<li><code>REDIS_HOST</code>: Defaults to <code>localhost</code>.</li>
 </ul>
+<p>The Docker Compose YAML File shows how the environment variables are used.</p>
 <p>To run the Docker Compose YAML File:</p>
 <pre><code class="language-sh"><span class="hl-0">cd</span><span class="hl-1"> </span><span class="hl-2">./dependencies/</span><br/><span class="hl-1">docker </span><span class="hl-2">compose</span><span class="hl-1"> </span><span class="hl-2">up</span><span class="hl-1"> </span><span class="hl-2">--build</span><span class="hl-1"> </span><span class="hl-2">--force-recreate</span>
 </code></pre>
